@@ -1,22 +1,42 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Everything lives under /users/{userId}/...
-    match /users/{userId} {
-      // Read your own user doc; create your own user doc
-      allow read, create: if isOwner(userId);
-      // Update/delete only your own user doc
-      allow update, delete: if isOwner(userId);
-
-      // Any subcollection under a user (babies, appointments, dailyPlans, notes, etc.)
-      match /{sub=**}/{docId} {
-        allow read, write: if isOwner(userId);
-      }
-    }
-
     function isOwner(userId) {
       return request.auth != null && request.auth.uid == userId;
+    }
+
+    match /users/{userId} {
+      // Allow reading the user's doc and deleting/creating/updating it
+      allow read, create, update, delete: if isOwner(userId);
+
+      // babies
+      match /babies/{babyId} {
+        allow read: if isOwner(userId);
+        allow write: if isOwner(userId);
+      }
+
+      // daily plans
+      match /dailyPlans/{dateId} {
+        // READ should not validate request.resource
+        allow read: if isOwner(userId);
+        // WRITE may validate the incoming data
+        allow write: if isOwner(userId)
+          && (request.resource.data.tasks is list);
+      }
+
+      // appointments
+      match /appointments/{apptId} {
+        allow read: if isOwner(userId);
+        allow write: if isOwner(userId)
+          && (request.resource.data.at is timestamp);
+      }
+
+      // tips
+      match /tips/{tipId} {
+        allow read: if isOwner(userId);
+        allow write: if isOwner(userId)
+          && (request.resource.data.trimester in [1,2,3]);
+      }
     }
   }
 }
