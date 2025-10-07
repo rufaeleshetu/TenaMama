@@ -1,8 +1,16 @@
 import 'package:flutter/foundation.dart';
 
 class AppState extends ChangeNotifier {
-  bool pregnant = true;        // default
-  int weeksPregnant = 12;      // default
+  bool pregnant = true;
+  int weeksPregnant = 12;
+
+  int? get trimester {
+    if (!pregnant) return null;
+    if (weeksPregnant >= 1 && weeksPregnant <= 13) return 1;
+    if (weeksPregnant >= 14 && weeksPregnant <= 27) return 2;
+    if (weeksPregnant >= 28 && weeksPregnant <= 41) return 3;
+    return null;
+  }
 
   void setPregnant(bool v) {
     pregnant = v;
@@ -10,15 +18,7 @@ class AppState extends ChangeNotifier {
   }
 
   void setWeeks(int w) {
-    weeksPregnant = w.clamp(0, 42);
+    weeksPregnant = w.clamp(1, 41);
     notifyListeners();
-  }
-
-  int? get trimester {
-    if (!pregnant) return null;
-    final w = weeksPregnant;
-    if (w < 13) return 1;
-    if (w < 27) return 2;
-    return 3;
   }
 }
