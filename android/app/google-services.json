@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "958712561061",
+    "project_id": "tenamama-dev",
+    "storage_bucket": "tenamama-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958712561061:android:e239324bcafb6b82a1fc4c",
+        "android_client_info": {
+          "package_name": "com.example.tenamama"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6ntycwCLJ98ocHymDOah7AO9CoElttVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

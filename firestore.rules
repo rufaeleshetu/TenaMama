@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Everything lives under /users/{userId}/...
+    match /users/{userId} {
+      // Read your own user doc; create your own user doc
+      allow read, create: if isOwner(userId);
+      // Update/delete only your own user doc
+      allow update, delete: if isOwner(userId);
+
+      // Any subcollection under a user (babies, appointments, dailyPlans, notes, etc.)
+      match /{sub=**}/{docId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
