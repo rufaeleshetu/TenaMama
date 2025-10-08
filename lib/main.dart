@@ -10,6 +10,10 @@ import 'package:intl/intl.dart';
 import 'firebase_options.dart';
 import 'app_state.dart'; // exposes pregnant, weeksPregnant, trimester
 
+// Day 2: notifications
+import 'reminders/reminders_service.dart';
+import 'screens/reminders_screen.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -17,6 +21,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Day 2: initialize local notifications
+  await RemindersService.instance.init();
 
   // Ensure we have a signed-in user (anonymous is fine)
   final auth = FirebaseAuth.instance;
@@ -59,7 +66,21 @@ class TodayScreen extends StatelessWidget {
     final o = Firebase.app().options;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Today')),
+      appBar: AppBar(
+        title: const Text('Today'),
+        // Day 2: jump to Reminders screen
+        actions: [
+          IconButton(
+            tooltip: 'Reminders',
+            icon: const Icon(Icons.notifications_active_outlined),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const RemindersScreen()),
+              );
+            },
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
